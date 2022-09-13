@@ -35,4 +35,13 @@ public class EnemyController : MonoBehaviour
             Time.timeScale = 0;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            gameObject.SetActive(false);
+            other.gameObject.SetActive(false);
+        }
+    }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
+    [SerializeField] private ShootController _shootController;
     [SerializeField] private TouchController _touchController;
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private float moveSpeed;
@@ -24,5 +25,25 @@ public class CharacterController : MonoBehaviour
         var rotation = new Vector3(_touchController.Rotation.x, 0, _touchController.Rotation.y);
         Move(direction);
         Rotate(rotation);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            GameManager.instance.enemiesInArea.Add(other.gameObject);
+            Vector3 direction = other.transform.position - transform.position;
+            direction.y = 0;
+            direction = direction.normalized;
+            _shootController.Shoot(direction,gameObject.transform);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            GameManager.instance.enemiesInArea.Remove(other.gameObject);
+        }
     }
 }
